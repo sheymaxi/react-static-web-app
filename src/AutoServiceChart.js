@@ -1,41 +1,102 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+} from 'recharts';
 
 const AutoServiceChart = ({ data, type, title }) => {
-  const ChartComponent = () => {
-    switch (type) {
+  const renderChart = () => {
+    switch (type?.toLowerCase()) {
       case 'line':
-        return <div>Line Chart Placeholder</div>;
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {Object.keys(data[0] || {})
+                .filter(key => key !== 'name')
+                .map((key, index) => (
+                  <Line
+                    key={key}
+                    type="monotone"
+                    dataKey={key}
+                    stroke={`hsl(${index * 45}, 70%, 50%)`}
+                  />
+                ))}
+            </LineChart>
+          </ResponsiveContainer>
+        );
+
       case 'bar':
-        return <div>Bar Chart Placeholder</div>;
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {Object.keys(data[0] || {})
+                .filter(key => key !== 'name')
+                .map((key, index) => (
+                  <Bar
+                    key={key}
+                    dataKey={key}
+                    fill={`hsl(${index * 45}, 70%, 50%)`}
+                  />
+                ))}
+            </BarChart>
+          </ResponsiveContainer>
+        );
+
       case 'pie':
-        return <div>Pie Chart Placeholder</div>;
+        return (
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={150}
+                fill="#8884d8"
+                label
+              />
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        );
+
       default:
-        return <div>No visualization available</div>;
+        return <div>Unsupported chart type: {type}</div>;
     }
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}>
-      <h3>{title}</h3>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
       {data && data.length > 0 ? (
-        <ChartComponent />
+        renderChart()
       ) : (
-        <div>No data available for visualization</div>
+        <div className="text-center text-gray-500">No data available</div>
       )}
     </div>
   );
-};
-
-AutoServiceChart.propTypes = {
-  data: PropTypes.array.isRequired,
-  type: PropTypes.oneOf(['line', 'bar', 'pie']).isRequired,
-  title: PropTypes.string.isRequired,
-};
-
-AutoServiceChart.defaultProps = {
-  data: [],
-  title: 'Default Chart Title',
 };
 
 export default AutoServiceChart;
