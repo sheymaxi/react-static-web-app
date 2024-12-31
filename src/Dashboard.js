@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import VoiceInput from '.src/VoiceInput';
-import AutoServiceChart from '.src/AutoServiceChart';
+import VoiceInput from './VoiceInput';
+import AutoServiceChart from './AutoServiceChart';
 
 const Dashboard = () => {
   const [queryResult, setQueryResult] = useState(null);
